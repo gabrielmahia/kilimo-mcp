@@ -2,7 +2,7 @@
 from __future__ import annotations
 from typing import Optional
 from fastmcp import FastMCP
-mcp = FastMCP(name="kilimo-mcp", description="Kenya precision agriculture tools. DEMO data only.")
+mcp = FastMCP(name="kilimo-mcp", instructions="Kenya precision agriculture tools. DEMO data only.")
 
 CALENDARS = {
     "maize": {
