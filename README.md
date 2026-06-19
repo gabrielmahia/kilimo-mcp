@@ -1,5 +1,8 @@
 # kilimo-mcp
 
+[![kilimo-mcp Glama score](https://glama.ai/mcp/servers/gabrielmahia/kilimo-mcp/badges/score.svg)](https://glama.ai/mcp/servers/gabrielmahia/kilimo-mcp)
+
+
 > Kenya precision agriculture via MCP — crop calendar, fertilizer, pest alerts, KALRO varieties
 
 [![PyPI](https://img.shields.io/badge/PyPI-v0.1.0-blue)](https://github.com/gabrielmahia/kilimo-mcp)
