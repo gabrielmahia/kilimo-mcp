@@ -18,6 +18,30 @@ Install: `pip install kilimo-mcp` · Use with any MCP client.
 [![License](https://img.shields.io/badge/License-MIT-green)](https://github.com/gabrielmahia/kilimo-mcp)
 [![Layer](https://img.shields.io/badge/Layer-Social-purple)](https://github.com/gabrielmahia/kilimo-mcp)
 
+
+## AI Architecture: Agricultural Domain RAG
+
+Agricultural AI for East Africa requires domain-specific retrieval — generic
+models hallucinate crop varieties, soil types, and local market conditions.
+
+**Research basis:**
+- **AgriIR** (Springer 2026): configurable RAG framework for agricultural knowledge
+  retrieval — validates domain-specific retrieval over monolithic agricultural models.
+  Key finding: low computational cost with high accuracy when knowledge base is curated.
+- **RAG vs Fine-tuning on Agriculture** (arXiv 2401.08406): RAG outperforms fine-tuning
+  for dynamic agricultural knowledge (seasonal, location-specific, real-time market).
+- **DPGA 2026 focus**: Domain-specific DPGs in agriculture and climate are a
+  2026 strategic priority for Co-Develop and DPGA members.
+
+**Knowledge base pairing:**
+- Kenya National Drought Management Authority (NDMA) data → drought → crop risk
+- Kenya Meteorological Department seasonal forecasts → planting calendar
+- East Africa agricultural historical data (1906-1925, HuggingFace: gmahia)
+
+**Coordination:**
+Pairs with `wapimaji-mcp` (water), `bima-mcp` (insurance), `soko-mcp` (markets)
+via `africa-coord-bus` for full drought response cascade.
+
 ## Install
 
 ```bash
