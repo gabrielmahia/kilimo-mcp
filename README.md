@@ -1,4 +1,5 @@
 # kilimo-mcp
+<!-- mcp-name: io.github.gabrielmahia/kilimo-mcp -->
 
 [![kilimo-mcp Glama score](https://glama.ai/mcp/servers/gabrielmahia/kilimo-mcp/badges/score.svg)](https://glama.ai/mcp/servers/gabrielmahia/kilimo-mcp)
 [![smithery badge](https://smithery.ai/badge/@gabrielmahia/kilimo-mcp)](https://smithery.ai/server/@gabrielmahia/kilimo-mcp)

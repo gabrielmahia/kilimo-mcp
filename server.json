@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "name": "io.github.gabrielmahia/kilimo-mcp",
+  "description": "kilimo-mcp",
+  "repository": {
+    "url": "https://github.com/gabrielmahia/kilimo-mcp",
+    "source": "github"
+  },
+  "version": "0.1.2",
+  "packages": [
+    {
+      "registry_type": "pypi",
+      "identifier": "kilimo-mcp",
+      "version": "0.1.2",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

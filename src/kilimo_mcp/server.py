@@ -130,3 +130,7 @@ def input_cost_calculator(crop: str, acreage: float = 1.0) -> dict:
             "input_costs_per_acre_kes": base, "estimated_total_kes": total_scaled,
             "subsidy": "Fertilizer subsidy may reduce DAP/CAN costs — check county agriculture office",
             "disclaimer": "Prices vary by region and season. Get current quotes from your local agrodealer."}
+
+def main() -> None:
+    """Console entry point."""
+    mcp.run()
