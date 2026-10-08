@@ -1,7 +1,13 @@
 """KilimoMCP — Kenya Precision Agriculture Tools (6 tools). All data DEMO."""
 from __future__ import annotations
+
 from typing import Optional
+
 from fastmcp import FastMCP
+
+# Annotations tell clients which tools are safe to auto-approve (read-only, no side effects).
+READ_ONLY = {"readOnlyHint": True, "idempotentHint": True, "openWorldHint": False}
+
 mcp = FastMCP(name="kilimo-mcp", instructions="Kenya precision agriculture tools. DEMO data only.")
 
 CALENDARS = {
@@ -17,8 +23,8 @@ CALENDARS = {
     "sukuma_wiki": {"all": {"plant": "Any season", "harvest": "6 weeks after planting (continuous)", "days_to_maturity": "42"}},
 }
 
-@mcp.tool(name="crop_calendar", description="Kenya crop planting and harvesting calendar by region. DEMO.")
-def crop_calendar(crop: str, region: Optional[str] = "highland") -> dict:
+@mcp.tool(name="crop_calendar", description="Kenya crop planting and harvesting calendar by region. DEMO.", annotations=READ_ONLY)
+def crop_calendar(crop: str, region: str | None = "highland") -> dict:
     c = crop.lower().replace(" ","_")
     data = CALENDARS.get(c, {})
     r_data = data.get(region.lower() if region else "highland") or data.get("all") or {"note": "Crop not in sample dataset"}
@@ -26,8 +32,8 @@ def crop_calendar(crop: str, region: Optional[str] = "highland") -> dict:
             **r_data, "long_rains": "March–May (main planting)", "short_rains": "October–December",
             "kalro": "kalro.org for official crop recommendations"}
 
-@mcp.tool(name="fertilizer_guide", description="Fertilizer recommendations by Kenya crop and soil type. DEMO.")
-def fertilizer_guide(crop: str, soil_type: Optional[str] = "medium") -> dict:
+@mcp.tool(name="fertilizer_guide", description="Fertilizer recommendations by Kenya crop and soil type. DEMO.", annotations=READ_ONLY)
+def fertilizer_guide(crop: str, soil_type: str | None = "medium") -> dict:
     GUIDE = {
         "maize":  {"basal": "DAP 50kg/acre at planting", "top_dress": "CAN 50kg/acre 6 weeks after planting",
                    "organic": "2–3 tons/acre well-composted manure before planting"},
@@ -44,8 +50,8 @@ def fertilizer_guide(crop: str, soil_type: Optional[str] = "medium") -> dict:
             **rec, "soil_test": "Get soil test at KALRO soil lab: kalro.org (costs ~KES 1,000/sample)",
             "subsidy": "Kenya fertilizer subsidy scheme: check county agriculture office"}
 
-@mcp.tool(name="pest_disease_alert", description="Kenya crop pest and disease management guide. DEMO.")
-def pest_disease_alert(crop: str, symptom: Optional[str] = None) -> dict:
+@mcp.tool(name="pest_disease_alert", description="Kenya crop pest and disease management guide. DEMO.", annotations=READ_ONLY)
+def pest_disease_alert(crop: str, symptom: str | None = None) -> dict:
     PESTS = {
         "maize": [{"name": "Fall Armyworm", "symptom": "Ragged holes in leaves, frass in whorls",
                    "management": "Emamectin benzoate or chlorpyrifos. Early morning application. Report to county pest control."},
@@ -68,8 +74,8 @@ def pest_disease_alert(crop: str, symptom: Optional[str] = None) -> dict:
             "common_pests_diseases": pests, "emergency": "Pest outbreak: call KEPHIS 020-3597481",
             "fall_armyworm_hotline": "0800720553 (Kenya FAO FAW reporting)"}
 
-@mcp.tool(name="market_timing_guide", description="Best timing to sell Kenya produce based on price cycles. DEMO.")
-def market_timing_guide(commodity: str, county: Optional[str] = None) -> dict:
+@mcp.tool(name="market_timing_guide", description="Best timing to sell Kenya produce based on price cycles. DEMO.", annotations=READ_ONLY)
+def market_timing_guide(commodity: str, county: str | None = None) -> dict:
     TIMING = {
         "maize":    {"best_sell_months": ["Aug","Sep","Oct","Feb","Mar"],
                      "low_price_months": ["May","Jun"] ,
@@ -86,8 +92,8 @@ def market_timing_guide(commodity: str, county: Optional[str] = None) -> dict:
     return {"source": "DEMO — WFP VAM Kenya Market Monitor", "commodity": commodity, "county": county,
             **timing, "real_time_prices": "vam.wfp.org | soko-mcp for current market prices"}
 
-@mcp.tool(name="kalro_varieties", description="KALRO improved crop variety recommendations for Kenya. DEMO.")
-def kalro_varieties(crop: str, condition: Optional[str] = None) -> dict:
+@mcp.tool(name="kalro_varieties", description="KALRO improved crop variety recommendations for Kenya. DEMO.", annotations=READ_ONLY)
+def kalro_varieties(crop: str, condition: str | None = None) -> dict:
     VARIETIES = {
         "maize": [
             {"variety": "H614D", "days": 120, "condition": "highland, 1500-2100m", "yield": "30-40 bags/acre"},
@@ -112,7 +118,7 @@ def kalro_varieties(crop: str, condition: Optional[str] = None) -> dict:
             "recommended_varieties": varieties, "certified_seed": "Obtain from KEPHIS-registered agrodealers",
             "kalro": "kalro.org | 0722206986"}
 
-@mcp.tool(name="input_cost_calculator", description="Kenya farm input cost calculator and comparison. DEMO.")
+@mcp.tool(name="input_cost_calculator", description="Kenya farm input cost calculator and comparison. DEMO.", annotations=READ_ONLY)
 def input_cost_calculator(crop: str, acreage: float = 1.0) -> dict:
     COSTS = {
         "maize":  {"seed_kg": 10, "seed_cost": 600, "dap_kg": 50, "dap_cost": 5500,
@@ -124,7 +130,7 @@ def input_cost_calculator(crop: str, acreage: float = 1.0) -> dict:
     }
     c = crop.lower()
     base = COSTS.get(c, {"note": "Crop not in sample — estimate KES 30,000-80,000/acre for most crops"})
-    total = sum(v for k, v in base.items() if k.endswith("_kes") or k.endswith("_cost"))
+    total = sum(v for k, v in base.items() if k.endswith(("_kes", "_cost")))
     total_scaled = round(total * acreage, 0)
     return {"source": "DEMO — Kenya agrovet prices indicative 2025", "crop": crop, "acreage": acreage,
             "input_costs_per_acre_kes": base, "estimated_total_kes": total_scaled,
