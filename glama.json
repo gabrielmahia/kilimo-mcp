@@ -1,8 +1,8 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/1.0.0/server.json",
   "name": "kilimo-mcp",
-  "version": "0.1.4",
-  "description": "MCP server for Kenya precision agriculture — crop calendar, fertilizer guide, pe",
+  "version": "0.1.5",
+  "description": "Kenya agriculture tools: crop calendar, fertilizer guide, pest and disease alerts, market timing, KALRO varieties, input cost calculator",
   "license": "MIT",
   "author": {
     "name": "Gabriel Mahia",
