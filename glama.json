@@ -11,7 +11,7 @@
   "tools": [
     {
       "name": "crop_calendar",
-      "description": "Kenya crop planting and harvesting calendar by region. DEMO.",
+      "description": "Planting calendar for a Kenyan crop by region, with the long and short rains seasons. Use when a farmer asks when to plant or harvest. Looks the crop up in a small sample table (spaces become underscores) and the region (default highland, falling back to an all-regions entry); a crop not in the table returns the note 'Crop not in sample dataset' with only the season dates. Returns the source label, crop, region, the calendar entry, long and short rains dates and a KALRO pointer. Sample data labelled DEMO: confirm with KALRO or the county agriculture office. Read-only; no side effects.",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
@@ -20,7 +20,7 @@
     },
     {
       "name": "fertilizer_guide",
-      "description": "Fertilizer recommendations by Kenya crop and soil type. DEMO.",
+      "description": "Fertilizer recommendation for a crop: basal, top-dressing and organic options per acre. Use when a farmer asks what fertilizer to apply. Crops in the sample table get specific advice; any other crop gets a general note (DAP at planting, CAN at six weeks). soil_type is only echoed back. Returns the source label, crop, soil_type, the recommendation, a soil-test pointer (about KES 1,000 per sample) and a note on the fertilizer subsidy. Sample guidance labelled DEMO: confirm with a soil test and KALRO. Read-only; no side effects.",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
@@ -29,7 +29,7 @@
     },
     {
       "name": "pest_disease_alert",
-      "description": "Kenya crop pest and disease management guide. DEMO.",
+      "description": "Common pests and diseases of a crop with their symptoms and management. Use when a farmer describes damage and asks what it might be. symptom filters the sample list by matching text; if nothing matches, ALL the crop's entries are returned. Returns the source label, crop, the pests or diseases, an emergency KEPHIS number and the fall armyworm reporting line. Sample data labelled DEMO and not a diagnosis: confirm with a county extension officer or KEPHIS. Read-only; no side effects.",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
@@ -38,7 +38,7 @@
     },
     {
       "name": "market_timing_guide",
-      "description": "Best timing to sell Kenya produce based on price cycles. DEMO.",
+      "description": "Best and worst months to sell a commodity, with a storage tip. Use when a farmer asks when to sell. Only commodities in the sample table (such as maize and tomatoes) have month lists; any other returns a pointer to WFP market monitoring. county is only echoed back. Returns the source label, commodity, county, the timing entry and pointers to vam.wfp.org and soko-mcp for current prices. Seasonal patterns labelled DEMO, not price forecasts. Read-only; no side effects.",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
@@ -47,7 +47,7 @@
     },
     {
       "name": "kalro_varieties",
-      "description": "KALRO improved crop variety recommendations for Kenya. DEMO.",
+      "description": "Recommended KALRO varieties for a crop and growing condition, with days to maturity, suited conditions and typical yield. Use when a farmer asks which variety to plant. condition filters by matching text; if nothing matches, ALL varieties for the crop are returned. Returns the source label, crop, condition, recommended_varieties, certified-seed advice (KEPHIS-registered agrodealers) and a KALRO contact. Sample data labelled DEMO: confirm with KALRO. Read-only; no side effects.",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
@@ -56,7 +56,7 @@
     },
     {
       "name": "input_cost_calculator",
-      "description": "Kenya farm input cost calculator and comparison. DEMO.",
+      "description": "Estimate the cost of growing a crop in KES per acre and in total for an acreage: seed, fertilizer, labour and other items. Use when a farmer is budgeting a season. Only crops in the sample table are costed; for any other crop the per-acre entry is a note and estimated_total_kes is null, never zero. Returns the source label, crop, acreage, input_costs_per_acre_kes, estimated_total_kes, a subsidy note and a prices disclaimer. Indicative 2025 agrovet prices labelled DEMO: get quotes from a local agrodealer. Read-only; no side effects.",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
