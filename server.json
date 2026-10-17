@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.gabrielmahia/kilimo-mcp",
-  "description": "MCP server for agriculture coordination in East Africa (kilimo = farming)",
+  "description": "Kenya farming guides: crop calendar, fertilizer, pests, market timing, varieties, input costs.",
   "repository": {
     "url": "https://github.com/gabrielmahia/kilimo-mcp",
     "source": "github"
   },
-  "version": "0.1.6",
+  "version": "0.1.7",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "kilimo-mcp",
-      "version": "0.1.6",
+      "version": "0.1.7",
       "transport": {
         "type": "stdio"
       }
