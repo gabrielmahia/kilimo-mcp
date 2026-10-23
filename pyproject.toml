@@ -12,7 +12,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kilimo-mcp"
-version = "0.1.8"
+version = "0.1.9"
 description = "Kenya agriculture tools: crop calendar, fertilizer guide, pest and disease alerts, market timing, KALRO varieties, input cost calculator"
 classifiers = [
     "Development Status :: 4 - Beta",
