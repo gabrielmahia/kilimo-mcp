@@ -47,7 +47,7 @@ pip install kilimo-mcp
 
 ## What it does
 
-6 MCP tools covering Kenya precision agriculture. 1st world equivalent: **Climate Corp / Granular**.
+8 MCP tools covering Kenya precision agriculture. 1st world equivalent: **Climate Corp / Granular**.
 
 | Tool | Description |
 |------|-------------|
@@ -57,6 +57,8 @@ pip install kilimo-mcp
 | `market_timing_guide` | Best timing to sell produce based on price cycles |
 | `kalro_varieties` | KALRO improved crop variety recommendations |
 | `input_cost_calculator` | Kenya farm input cost calculator and comparison |
+| `rainfall_forecast` | Daily rain forecast (mm, chance) for any location, from Open-Meteo |
+| `food_market_prices` | Latest WFP market prices in Kenya for a commodity, via HDX HAPI |
 
 ## Usage
 
@@ -89,6 +91,13 @@ All data in this server is **clearly labeled DEMO** where synthetic. Verify all 
 MIT © Gabriel Mahia | [AI-KungFU](https://github.com/gabrielmahia) | contact@aikungfu.dev
 
 > *Decision infrastructure for East Africa*
+
+## Live data
+
+- `rainfall_forecast`: daily rain (mm) and chance of rain for up to 16 days at any location, from [Open-Meteo](https://open-meteo.com) (CC BY 4.0; free API for non-commercial use).
+- `food_market_prices`: the latest WFP-monitored market prices in Kenya for a commodity, optionally by county, via [HDX HAPI](https://hapi.humdata.org) (WFP data CC BY-IGO).
+
+Each live answer names its source, attribution and retrieval time; if a service does not answer, the tool returns an error instead of a number. The other tools are unchanged.
 
 ## Part of the East Africa Coordination Stack
 

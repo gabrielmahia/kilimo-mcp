@@ -1,6 +1,12 @@
 """KilimoMCP — Kenya Precision Agriculture Tools (6 tools). All data DEMO."""
 from __future__ import annotations
 
+import base64
+import json
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import UTC, datetime, timedelta
 from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as _pkg_version
 from typing import Annotated, Optional
@@ -145,6 +151,77 @@ def input_cost_calculator(crop: Annotated[str, Field(description="Crop name such
             "input_costs_per_acre_kes": base, "estimated_total_kes": total_scaled if "note" not in base else None,
             "subsidy": "Fertilizer subsidy may reduce DAP/CAN costs — check county agriculture office",
             "disclaimer": "Prices vary by region and season. Get current quotes from your local agrodealer."}
+
+
+# ── Live data (free public services) ─────────────────────────────────
+# Live tools change nothing anywhere, but they contact an outside service, and clients should know that.
+LIVE_READ_ONLY = {"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True}
+LIVE_TOOLS = {"rainfall_forecast", "food_market_prices"}
+_LIVE_UA = {"User-Agent": "kilimo-mcp (https://github.com/gabrielmahia/kilimo-mcp)", "Accept": "application/json"}
+_LIVE_ERRORS = (urllib.error.URLError, TimeoutError, ValueError, KeyError, TypeError, IndexError)
+
+
+def _live_get(url: str, params: dict | None = None, timeout: float = 20.0):
+    if params:
+        url = url + "?" + urllib.parse.urlencode(params)
+    req = urllib.request.Request(url, headers=_LIVE_UA)
+    with urllib.request.urlopen(req, timeout=timeout) as r:  # fixed https endpoints only
+        return json.loads(r.read().decode("utf-8"))
+
+
+def _live_meta(source: str, attribution: str) -> dict:
+    return {"source": source, "attribution": attribution, "retrieved_at": datetime.now(UTC).isoformat(timespec="seconds")}
+
+@mcp.tool(name="rainfall_forecast", annotations=LIVE_READ_ONLY, description="Get the daily rainfall forecast for a location in Kenya (or anywhere) for up to 16 days, from the free Open-Meteo weather service: expected millimetres and the chance of rain each day. Use when someone is planning planting, irrigation, water storage, travel or flood preparation and needs the rain outlook for a place. Returns one row per day with rain in mm and the maximum chance of rain in percent, the total, the source, its attribution and the retrieval time; on a network or service failure it returns an error instead of a forecast. Read-only; contacts an external service.")
+def rainfall_forecast(latitude: Annotated[float, Field(description="Latitude in decimal degrees, for example -1.29 for Nairobi or -0.09 for Kisumu; between -90 and 90.")],
+                      longitude: Annotated[float, Field(description="Longitude in decimal degrees, for example 36.82 for Nairobi; between -180 and 180.")],
+                      days: Annotated[int, Field(description="How many days ahead to forecast, between 1 and 16.")] = 7) -> dict:
+    meta = _live_meta("LIVE — Open-Meteo weather forecast API (api.open-meteo.com)", "Weather data by Open-Meteo.com, CC BY 4.0. The free API is for non-commercial use.")
+    if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
+        return {"error": "latitude must be between -90 and 90 and longitude between -180 and 180", **meta}
+    if not 1 <= days <= 16:
+        return {"error": "days must be between 1 and 16", **meta}
+    try:
+        d = _live_get("https://api.open-meteo.com/v1/forecast", {"latitude": latitude, "longitude": longitude, "daily": "precipitation_sum,precipitation_probability_max", "forecast_days": days, "timezone": "Africa/Nairobi"})
+        daily = d["daily"]
+        rows = [{"date": t, "rain_mm": r, "chance_pct": p} for t, r, p in zip(daily["time"], daily["precipitation_sum"], daily["precipitation_probability_max"], strict=True)]
+        if not rows:
+            raise ValueError("empty forecast")
+    except _LIVE_ERRORS as e:
+        return {"error": f"Open-Meteo did not return a usable forecast ({type(e).__name__}); no forecast is given without it. Try again later.", **meta}
+    return {"latitude": latitude, "longitude": longitude, "days": rows, "total_rain_mm": round(sum(r["rain_mm"] or 0 for r in rows), 1),
+            "note": "A model forecast: confidence falls with each day ahead, and local storms can differ from the grid forecast.", **meta}
+
+@mcp.tool(name="food_market_prices", annotations=LIVE_READ_ONLY, description="Get recent food prices in Kenyan markets for a commodity (for example maize, beans, rice, sorghum, milk or sugar), from the World Food Programme's market monitoring, served by the free Humanitarian Data Exchange API (HDX HAPI). Use when someone is deciding when or where to buy or sell, checking whether a price is fair, or tracking food costs in a county. Returns the latest price per market and unit with its date, the source, its licence and the retrieval time; on a network or service failure it returns an error instead of prices. Read-only; contacts an external service.")
+def food_market_prices(commodity: Annotated[str, Field(description="Commodity name or part of it, for example maize, beans, rice, sorghum, milk or sugar.")],
+                       county: Annotated[str | None, Field(description="Optional county name to filter on, for example Turkana or Marsabit (WFP monitors mainly arid and semi-arid counties).")] = None,
+                       months: Annotated[int, Field(description="How far back to look for the latest prices, in months, between 1 and 60.")] = 12) -> dict:
+    meta = _live_meta("LIVE — WFP market monitor via HDX HAPI (hapi.humdata.org)", "World Food Programme price data via the Humanitarian Data Exchange (HDX HAPI); WFP data licensed CC BY-IGO.")
+    name = (commodity or "").strip()
+    if not 1 <= len(name) <= 60:
+        return {"error": "commodity must be between 1 and 60 characters", **meta}
+    if not 1 <= months <= 60:
+        return {"error": "months must be between 1 and 60", **meta}
+    since = (datetime.now(UTC) - timedelta(days=31 * months)).date().isoformat()
+    params = {"location_code": "KEN", "commodity_name": name, "reference_period_start_min": since, "limit": 1000, "output_format": "json",
+              "app_identifier": base64.b64encode(b"kilimo-mcp:contact@aikungfu.dev").decode()}
+    if county:
+        params["admin1_name"] = county.strip()
+    try:
+        data = _live_get("https://hapi.humdata.org/api/v2/food-security-nutrition-poverty/food-prices-market-monitor", params)["data"]
+    except _LIVE_ERRORS as e:
+        return {"error": f"HDX HAPI did not return usable prices ({type(e).__name__}); no prices are given without it. Try again later.", **meta}
+    latest = {}
+    for row in data:
+        key = (row.get("market_name"), row.get("commodity_name"), row.get("unit"), row.get("price_type"))
+        if key not in latest or row["reference_period_start"] > latest[key]["reference_period_start"]:
+            latest[key] = row
+    out = sorted(latest.values(), key=lambda r: r["reference_period_start"], reverse=True)[:25]
+    prices = [{"market": r.get("market_name"), "county": r.get("admin1_name"), "commodity": r.get("commodity_name"), "unit": r.get("unit"), "price": r.get("price"),
+               "currency": r.get("currency_code"), "price_type": r.get("price_type"), "date": (r.get("reference_period_start") or "")[:10]} for r in out]
+    return {"commodity": name, "county": county, "since": since, "prices": prices, "count": len(prices),
+            "note": "WFP monitors selected markets, mostly in arid and semi-arid counties; an empty list means no observation in that window, not that the item is unavailable.", **meta}
+
 
 def main() -> None:
     """Console entry point."""
