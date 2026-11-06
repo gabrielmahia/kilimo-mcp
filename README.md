@@ -2,19 +2,14 @@
 <!-- mcp-name: io.github.gabrielmahia/kilimo-mcp -->
 
 [![kilimo-mcp Glama score](https://glama.ai/mcp/servers/gabrielmahia/kilimo-mcp/badges/score.svg)](https://glama.ai/mcp/servers/gabrielmahia/kilimo-mcp)
-[![smithery badge](https://smithery.ai/badge/@gabrielmahia/kilimo-mcp)](https://smithery.ai/server/@gabrielmahia/kilimo-mcp)
-
 
 Install: `pip install kilimo-mcp` · Use with any MCP client.
-
-
 
 > Kenya precision agriculture via MCP — crop calendar, fertilizer, pest alerts, KALRO varieties
 
 [![PyPI](https://img.shields.io/badge/PyPI-v0.1.0-blue)](https://github.com/gabrielmahia/kilimo-mcp)
 [![License](https://img.shields.io/badge/License-MIT-green)](https://github.com/gabrielmahia/kilimo-mcp)
 [![Layer](https://img.shields.io/badge/Layer-Social-purple)](https://github.com/gabrielmahia/kilimo-mcp)
-
 
 ## AI Architecture: Agricultural Domain RAG
 
