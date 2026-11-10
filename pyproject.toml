@@ -13,7 +13,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kilimo-mcp"
-version = "0.1.12"
+version = "0.1.13"
 description = "Kenya agriculture tools: crop calendar, fertilizer guide, pest and disease alerts, market timing, KALRO varieties, input cost calculator"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -29,7 +29,7 @@ classifiers = [
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
-dependencies = ["fastmcp>=0.9"]
+dependencies = ["fastmcp>=4.1.4"]
 license-files = ["LICENSE"]
 
 [project.scripts]

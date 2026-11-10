@@ -3,7 +3,7 @@ message: "If you use this software, please cite it as below."
 type: software
 title: "kilimo-mcp"
 abstract: "Kenya agriculture tools: crop calendar, fertilizer guide, pest and disease alerts, market timing, KALRO varieties, input cost calculator"
-version: "0.1.12"
+version: "0.1.13"
 authors:
   - family-names: "Mahia"
     given-names: "Gabriel"
